@@ -1,0 +1,101 @@
+/* Simple Pages Styles (Contact, FAQ, Privacy, Terms) - HappyFox Theme */
+.simple-page {
+  max-width: 800px;
+  margin: var(--spacing-8) auto;
+  padding: var(--spacing-8);
+  background: var(--bg-white);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--border-light);
+}
+
+.simple-page h1 {
+  font-size: 2rem;
+  color: var(--text-dark);
+  margin-bottom: var(--spacing-2);
+  text-align: center;
+}
+
+.simple-page h2 {
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  margin: var(--spacing-6) 0 var(--spacing-3);
+}
+
+.simple-page h3 {
+  font-size: 1.125rem;
+  color: var(--text-dark);
+  margin: var(--spacing-5) 0 var(--spacing-2);
+}
+
+.simple-page p {
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin: var(--spacing-3) 0;
+  font-size: 0.875rem;
+}
+
+.simple-page ul, 
+.simple-page ol {
+  margin: var(--spacing-3) 0 var(--spacing-4) var(--spacing-5);
+  color: var(--text-muted);
+  font-size: 0.875rem;
+}
+
+.simple-page li {
+  margin: var(--spacing-2) 0;
+}
+
+/* Contact Page */
+.contact-info {
+  text-align: center;
+  margin-top: var(--spacing-6);
+}
+
+.contact-info p {
+  margin: var(--spacing-3) 0;
+  font-size: 1rem;
+}
+
+.contact-info strong {
+  color: var(--text-dark);
+}
+
+/* FAQ Page */
+.faq-item {
+  background: var(--bg-light);
+  padding: var(--spacing-4);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-4);
+  border: 1px solid var(--border-light);
+}
+
+.faq-item h3 {
+  margin-top: 0;
+  color: var(--primary-blue);
+  font-size: 1rem;
+}
+
+.faq-item p {
+  margin-bottom: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .simple-page {
+    margin: var(--spacing-4);
+    padding: var(--spacing-5);
+  }
+  
+  .simple-page h1 {
+    font-size: 1.5rem;
+  }
+  
+  .simple-page h2 {
+    font-size: 1.25rem;
+  }
+  
+  .faq-item {
+    padding: var(--spacing-3);
+  }
+}
