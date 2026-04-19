@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: quickcart-backend
+    runtime: python
+    rootDir: backend
+    buildCommand: ./build.sh
+    startCommand: gunicorn backend.wsgi:application
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_SETTINGS_MODEL
+        value: backend.settings
+      - key: PYTHON_VERSION
+        value: 3.11.5

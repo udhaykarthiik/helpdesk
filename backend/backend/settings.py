@@ -18,11 +18,6 @@ from datetime import timedelta
 # Load environment variables from .env file
 load_dotenv()
 
-# Gemini API Settings
-GEMINI_API_KEY = os.getenv('GEMINI_API_KEY')
-GEMINI_MODEL = os.getenv('GEMINI_MODEL', 'gemini-1.5-flash')
-GEMINI_TEMPERATURE = float(os.getenv('GEMINI_TEMPERATURE', '0.3'))
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -31,12 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-i9yqj*gt3n&87%2&u3n+yx74rxjkuxf4gks($h9t#3d)5c$eek'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'django-insecure-i9yqj*gt3n&87%2&u3n+yx74rxjkuxf4gks($h9t#3d)5c$eek')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+# Allow all hosts in production (update with your Render URL)
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -133,16 +129,16 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email settings for development - JUST PRINTS TO CONSOLE
+# Email settings
 import os
 
-# Email settings
 if os.getenv('EMAIL_HOST_USER'):  # If email is configured in .env
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
@@ -150,24 +146,26 @@ if os.getenv('EMAIL_HOST_USER'):  # If email is configured in .env
     EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
     EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'QuickCart Support <udhaykarthik51@gmail.com>')
+    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', 'QuickCart Support <noreply@quickcart.com>')
 else:
     # Development - print to console
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    DEFAULT_FROM_EMAIL = 'QuickCart Support <udhaykarthik51@gmail.com>'
+    DEFAULT_FROM_EMAIL = 'QuickCart Support <noreply@quickcart.com>'
 
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = True  # Only for development!
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
 
 # REST Framework settings
 REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # Only for development!
+        'rest_framework.permissions.AllowAny',
     ]
 }
-
-import os
 
 # Media files (uploads)
 MEDIA_URL = '/media/'
@@ -179,12 +177,6 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 5242880  # 5MB
 
 
 # JWT Settings
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
-}
-
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
@@ -200,5 +192,8 @@ SIMPLE_JWT = {
     'TOKEN_TYPE_CLAIM': 'token_type',
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# Production settings - Override when RENDER environment variable exists
+if os.environ.get('RENDER'):
+    DEBUG = False
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', SECRET_KEY)
+    ALLOWED_HOSTS = ['.onrender.com', 'localhost', '127.0.0.1']
